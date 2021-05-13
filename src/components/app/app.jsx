@@ -1,28 +1,37 @@
 import React from "react";
-
 import Header from "../header";
 import RandomPlanet from "../random-planet";
-import ItemList from "../item-list";
-import PersonDetails from "../person-details";
+import ErrorBoundry from "../error-boundry";
+import SwapiService from "../../services/swapi-service";
+import { SwapiServiceProvider } from "../../components/swapi-service-context";
+import { PeoplePage, PlanetsPage, StarshipsPage } from "../pages";
 
 import "./app.css";
 
-const App = () => {
-  return (
-    <div className="container">
-      <Header />
-      <RandomPlanet />
+export default class App extends React.Component {
+  swapiService = new SwapiService();
 
-      <div className="row mb2">
-        <div className="col-md-6">
-          <ItemList />
-        </div>
-        <div className="col-md-6">
-          <PersonDetails />
-        </div>
-      </div>
-    </div>
-  );
-};
+  state = {
+    hasError: false,
+  };
 
-export default App;
+  render() {
+    return (
+      <ErrorBoundry>
+        <SwapiServiceProvider value={this.swapiService}>
+          <div className="container">
+            <Header />
+
+            <RandomPlanet />
+
+            <PeoplePage />
+
+            <PlanetsPage />
+
+            <StarshipsPage />
+          </div>
+        </SwapiServiceProvider>
+      </ErrorBoundry>
+    );
+  }
+}
