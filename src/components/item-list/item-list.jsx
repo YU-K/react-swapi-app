@@ -1,15 +1,31 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import "./item-list.css";
 
-export default class ItemList extends React.Component {
-  render() {
+const ItemList = (props) => {
+  const { data, onItemSelected, children: renderLabel } = props;
+
+  const items = data.map((item) => {
+    const { id } = item;
+    const label = renderLabel(item);
+
     return (
-      <ul className="item-list list-group">
-        <li className="list-group-item">Luke Skywalker</li>
-        <li className="list-group-item">Darth Vader</li>
-        <li className="list-group-item">R2-D2</li>
-      </ul>
+      <li
+        key={id}
+        className="list-group-item"
+        onClick={() => onItemSelected(id)}
+      >
+        {label}
+      </li>
     );
-  }
-}
+  });
+  return <ul className="item-list list-group">{items}</ul>;
+};
+ItemList.propTypes = {
+  onItemSelected: PropTypes.func,
+  data: PropTypes.arrayOf(PropTypes.object).isRequired,
+  children: PropTypes.func.isRequired,
+};
+
+export default ItemList;
